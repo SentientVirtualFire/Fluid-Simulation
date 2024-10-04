@@ -14,6 +14,49 @@ winDimensions = screen.get_size()
 #the font for the GUI
 font = pygame.font.SysFont('chalkduster.ttf', 40)
 
+#default particle count, may adjust
+particleCount = 1000
+particleMass = 1
+particleViscosity = 1
+particleDensity = 1
+posRange = [(10,500),(10,500)]
+
+#load all particles
+def particleGeneration():
+    particles = []
+
+    #temporary variable to work out factors
+    factor = round(math.sqrt(particleCount))
+    #work out closest factors
+    while particleCount%factor > 0: 
+        factor -= 1
+    #number of particles in each row in column
+    rowCount = factor
+    columnCount = particleCount//factor
+
+    for x in rowCount:
+         xPos = posRange[1][0]
+         for y in columnCount:
+              yPos = posRange[1][0]
+
+              particle = Particle.Particle(
+                   xPos,
+                   yPos,
+                   particleMass,
+                   particleViscosity,
+                   particleDensity)
+              particles.append(particle)
+
+              yPos += (posRange[1][1] - posRange[1][0])/columnCount
+        
+         xPos += (posRange[0][1] - posRange[0][0])/columnCount
+
+
+
+
+
+
+
 #sets the program to started
 running = True
 #if running is False program will stop

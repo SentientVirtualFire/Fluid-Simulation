@@ -1,7 +1,7 @@
 #class defining particles
 class Particle:
     #initialising the particles, not all properties are required immediately 
-    def __init__(self, x, y, mass, viscosity, density, pressure, 
+    def __init__(self, x, y, mass, viscosity, density, pressure = 0, 
                  cell = None, dx = 0, dy = 0, colour = "black", size = 1):
         #particle's position
         self.position = x,y
