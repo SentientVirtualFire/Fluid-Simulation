@@ -1,6 +1,6 @@
 #Importing all modules 
-import math, Particle, pygame
-
+import math, Particle, pygame, Draw
+from timeit import default_timer as timer
 
 #initialise the pygame gui system
 pygame.init()
@@ -14,16 +14,21 @@ winDimensions = screen.get_size()
 #the font for the GUI
 font = pygame.font.SysFont('chalkduster.ttf', 40)
 
-#default particle count, may adjust
+#list of all particles
+particles = []
+#default particle count
 particleCount = 1000
+#default mass
 particleMass = 1
+#default viscosity
 particleViscosity = 1
+#default density
 particleDensity = 1
-posRange = [(10,500),(10,500)]
+#the range of x and y positions over which the particles will be produced
+posRange = ((10,500),(10,500))
 
 #load all particles
-def particleGeneration():
-    particles = []
+def particleGeneration(particles):
 
     #temporary variable to work out factors
     factor = round(math.sqrt(particleCount))
@@ -34,33 +39,43 @@ def particleGeneration():
     rowCount = factor
     columnCount = particleCount//factor
 
+    #starting x position
+    xPos = posRange[1][0]
+    #iterate over all rows and columns
     for x in rowCount:
-         xPos = posRange[1][0]
-         for y in columnCount:
-              yPos = posRange[1][0]
-
-              particle = Particle.Particle(
-                   xPos,
-                   yPos,
-                   particleMass,
-                   particleViscosity,
-                   particleDensity)
-              particles.append(particle)
-
-              yPos += (posRange[1][1] - posRange[1][0])/columnCount
+        #starting y position
+        yPos = posRange[1][0]
+        for y in columnCount:
+            #instantiate particle class at this position
+            particle = Particle.Particle(
+                xPos,
+                yPos,
+                particleMass,
+                particleViscosity,
+                particleDensity)
+            #add to list of particles
+            particles.append(particle)
+            #increment y position by fixed amount
+            yPos += (posRange[1][1] - posRange[1][0])/columnCount
         
-         xPos += (posRange[0][1] - posRange[0][0])/columnCount
+        #increment x position by fixed amount
+        xPos += (posRange[0][1] - posRange[0][0])/rowCount
+    #returns the generated list of particles
+    return particles
 
 
 
 
 
 
-
+#counts fps
+fps = 0
 #sets the program to started
 running = True
 #if running is False program will stop
 while running:
+    #takes current time
+    start = timer()
     #holds all the keys pressed this frame/iteration
     keys = pygame.key.get_pressed()
     #iiterates all events pygame has proccessed, including keypresses
@@ -74,5 +89,14 @@ while running:
                 #this part doesn't require the keys list as it is one item
                 if event.key == pygame.K_q:
                     running = False
+    
+    #call module to draw particles
+    Draw.drawParticles(particles, screen, pygame)
 
-        
+    #takes time elapsed
+    elapsed = timer() - start
+    #calculates fps
+    fps = 1/elapsed
+    #logs fps
+    print(fps)
+
