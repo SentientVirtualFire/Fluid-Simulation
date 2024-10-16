@@ -1,5 +1,5 @@
 #Importing all modules 
-import math, Particle, pygame, Draw
+import math, Particle, pygame, Draw, Generator
 from timeit import default_timer as timer
 
 #initialise the pygame gui system
@@ -16,52 +16,8 @@ font = pygame.font.SysFont('chalkduster.ttf', 40)
 
 #list of all particles
 particles = []
-#default particle count
-particleCount = 1000
-#default mass
-particleMass = 1
-#default viscosity
-particleViscosity = 1
-#default density
-particleDensity = 1
-#the range of x and y positions over which the particles will be produced
-posRange = ((10,500),(10,500))
-
-#load all particles
-def particleGeneration(particles):
-
-    #temporary variable to work out factors
-    factor = round(math.sqrt(particleCount))
-    #work out closest factors
-    while particleCount%factor > 0: 
-        factor -= 1
-    #number of particles in each row in column
-    rowCount = factor
-    columnCount = particleCount//factor
-
-    #starting x position
-    xPos = posRange[1][0]
-    #iterate over all rows and columns
-    for x in rowCount:
-        #starting y position
-        yPos = posRange[1][0]
-        for y in columnCount:
-            #instantiate particle class at this position
-            particle = Particle.Particle(
-                xPos,
-                yPos,
-                particleMass,
-                particleViscosity,
-                particleDensity)
-            #add to list of particles
-            particles.append(particle)
-            #increment y position by fixed amount
-            yPos += (posRange[1][1] - posRange[1][0])/columnCount
-        
-        #increment x position by fixed amount
-        xPos += (posRange[0][1] - posRange[0][0])/rowCount
-    #returns the generated list of particles
-    return particles
+#load all particles into function
+particles = Generator.particleGeneration(particles)
 
 
 

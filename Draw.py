@@ -7,3 +7,6 @@ def drawParticles(particles, screen, pygame):
         #uses pygame function to draw particles
         pygame.draw.circle(screen, particle.colour, particle.position, particle.size)
     
+    #shows screen to user
+    pygame.display.flip()    
+
