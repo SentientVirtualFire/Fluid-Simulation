@@ -10,7 +10,7 @@ particleViscosity = 1
 #default density
 particleDensity = 1
 #the range of x and y positions over which the particles will be produced
-posRange = ((10,500),(10,500))
+posRange = ((50,500),(50,500))
 
 #load all particles
 def particleGeneration(particles):
@@ -26,15 +26,17 @@ def particleGeneration(particles):
 
     #iterate over all rows and columns
     #range: starting x position, end x position, step for each num in row count
-    for xPos in range(posRange[0][0],
-                      posRange[0][1],
-                      (posRange[0][1] - posRange[0][0])/rowCount):
-
+    for xPos in range(posRange[0][0]*rowCount,
+                      posRange[0][1]*rowCount,
+                      posRange[0][1] - posRange[0][0]):
+        #readjust x position value
+        xPos /= rowCount
         #range: starting y position, end y position, step for each num in column count
-        for yPos in range(posRange[1][0], 
-                          posRange[1][1], 
-                          (posRange[1][1] - posRange[1][0])/columnCount):
-            
+        for yPos in range(posRange[1][0]*columnCount, 
+                          posRange[1][1]*columnCount, 
+                          posRange[1][1] - posRange[1][0]):
+            #readjust y position value
+            yPos /= columnCount
             #instantiate particle class at this position
             particle = Particle.Particle(
                 xPos,
