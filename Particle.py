@@ -26,7 +26,18 @@ class Particle:
         self.radius = radius
     
     #update next position
-    def update(self, neighbours):
+    def update(self, neighbours, screenSize):
+        #validate x to bounds based on screen size and 0
+        if self.position[0] > screenSize[0]:
+            self.position[0] = screenSize[0]
+        if self.position[0] < 0:
+            self.position[0] = 0
+        #validate y to bounds based on screen size and 0
+        if self.position[1] > screenSize[1]:
+            self.position[1] = screenSize[1]
+        if self.position[1] < 0:
+            self.position[1] = 0
+
         pass
         
     

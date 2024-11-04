@@ -14,6 +14,14 @@ posRange = ((50,500),(50,500))
 
 #load all particles
 def particleGeneration(particles):
+    #check particleCount is in allowed range
+    if particleCount > 1000:
+        particleCount = 1000
+    if particleCount < 2:
+        particleCount = 2
+    #check particleCount is in allowed type
+    if type(particleCount) != type(4):
+        raise TypeError
 
     #temporary variable to work out factors
     factor = round(math.sqrt(particleCount))

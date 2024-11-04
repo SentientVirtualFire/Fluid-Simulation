@@ -53,7 +53,7 @@ while running:
     #get all particles and calculate with their neighbours
     for p in particles:
         neighbours = grid.getNeighbors(p)
-        p.update(neighbours)
+        p.update(neighbours, screen.get_size())
     #apply all new positions
     for p in particles:
          p.applyUdt()
