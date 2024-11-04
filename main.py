@@ -1,5 +1,5 @@
 #Importing all modules 
-import math, Particle, pygame, Draw, Generator
+import math, Particle, pygame, Draw, Generator, Grid
 from timeit import default_timer as timer
 
 #initialise the pygame gui system
@@ -23,7 +23,11 @@ particles = Generator.particleGeneration(particles)
 
 
 
-
+#initialise grid
+grid = Grid.Grid(50, screen.get_size())
+#update grid positions
+for p in particles:
+    grid.addParticle(p)
 #counts fps
 fps = 0
 #sets the program to started
@@ -46,8 +50,19 @@ while running:
                 if event.key == pygame.K_q:
                     running = False
     
+    #get all particles and calculate with their neighbours
+    for p in particles:
+        neighbours = grid.getNeighbors(p)
+        p.update(neighbours)
+    #apply all new positions
+    for p in particles:
+         p.applyUdt()
     #call module to draw particles
     Draw.drawParticles(particles, screen, pygame)
+    #update grid positions
+    for p in particles:
+        grid.removeParticle(p)
+        grid.addParticle(p)
 
     #takes time elapsed
     elapsed = timer() - start
