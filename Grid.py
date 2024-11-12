@@ -8,27 +8,27 @@ class Grid:
         #set size of grid
         self.cellSize = size
         #use size to calculate num columns
-        self.columns = math.ceil(screenSize[0] / cellSize)
+        self.columns = math.ceil(screenSize[0] / self.cellSize)
         #use size to calculate num rows
-        self.rows = math.ceil(screenSize[1] / cellSize)
+        self.rows = math.ceil(screenSize[1] / self.cellSize)
         
         #make cell list
         self.cells = []
         
         #add lists to hold each particle once made
-        for x in range(columns):
+        for x in range(self.columns):
             #add each column to list
             self.cells.append([])
-            for y in range(rows):
+            for y in range(self.rows):
                 #add each row to list
                 self.cells[x].append([])
     
     #adds particle to grid cell
     def addParticle(self, particle):
         #works out column index
-        col_idx = math.floor( particle.pos[0] / this.cellSize)
+        col_idx = math.floor( particle.position[0] / self.cellSize)
         #works out row index
-        row_idx = math.floor( particle.pos[1] / this.cellSize)
+        row_idx = math.floor( particle.position[1] / self.cellSize)
 
         #add particle to corresponding row and column in cells list
         self.cells[col_idx][row_idx].append(particle)
@@ -38,9 +38,9 @@ class Grid:
     #removes particle from grid cell
     def removeParticle(self, particle):
         #works out column index
-        col_idx = particle.gridCell["column"]
+        col_idx = particle.cell["column"]
         #works out row index
-        row_idx = particle.gridCell["row"]
+        row_idx = particle.cell["row"]
 
         #get grid cell
         cell = self.cells[col_idx][row_idx]
@@ -53,13 +53,13 @@ class Grid:
     def getNeighbors(self, particle):
         #find top grid cell in top left using radius
         top_left = [
-            math.floor((particle.pos[0] - particle.radius) / self.cellSize),
-            math.floor((particle.pos[1] - particle.radius) / self.cellSize),
+            math.floor((particle.position[0] - particle.radius) / self.cellSize),
+            math.floor((particle.position[1] - particle.radius) / self.cellSize),
         ]
         #find top grid cell in bottom right using radius
         bottom_right = [
-            math.floor((particle.pos[0] + particle.radius) / self.cellSize),
-            math.floor((particle.pos[1] + particle.radius) / self.cellSize),
+            math.floor((particle.position[0] + particle.radius) / self.cellSize),
+            math.floor((particle.position[1] + particle.radius) / self.cellSize),
         ]
         #list of neighbours
         neighbors = []
@@ -68,7 +68,7 @@ class Grid:
         for i in range(top_left[0], bottom_right[0] + 1):
             for j in range(top_left[1], bottom_right[1] + 1):
                 #don't access grid cells that don't exist
-                if i < 0 or j < 0 or i >= self.numCols or j >= self.numRows:
+                if i < 0 or j < 0 or i >= self.columns or j >= self.rows:
                     continue
                 #get current cell from array
                 cell = self.cells[i][j]

@@ -1,8 +1,7 @@
 #get modules
 import Particle, math
 
-#default particle count
-particleCount = 1000
+
 #default mass
 particleMass = 1
 #default viscosity
@@ -11,12 +10,16 @@ particleViscosity = 1
 particleDensity = 1
 #the range of x and y positions over which the particles will be produced
 posRange = ((50,500),(50,500))
+#gravitational constant
+gravity = 0.001
 
 #load all particles
 def particleGeneration(particles):
+    #default particle count
+    particleCount = 1000
     #check particleCount is in allowed range
-    if particleCount > 1000:
-        particleCount = 1000
+    if particleCount > 10000:
+        particleCount = 10000
     if particleCount < 2:
         particleCount = 2
     #check particleCount is in allowed type

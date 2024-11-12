@@ -1,19 +1,22 @@
+#fetch modules
+import math, Generator
+
 #class defining particles
 class Particle:
     #initialising the particles, not all properties are required immediately 
     def __init__(self, x, y, mass, viscosity, density, pressure = 0, 
-                 cell = None, dx = 0, dy = 0, colour = "black", size = 1, radius = 10):
+                 cell = None, dx = 0, dy = 0, colour = "black", size = 1, radius = 3):
         #particle's position
-        self.position = x,y
+        self.position = [x,y]
         #next position in system
-        self.nextPos = x,y
+        self.nextPos = [x,y]
         #particle fixed properties, mass/visco/densit/pressure
         self.mass = mass
         self.viscosity = viscosity
         self.density = density
         self.pressure = pressure
         #particle's velocity/change in position
-        self.velocity = dx,dy
+        self.velocity = [dx,dy]
         #particle's assigned grid cell at start/ will vary
         self.cell = cell
         #particle's acceleration/change in velocity, set to zero, will change automatically
@@ -27,18 +30,28 @@ class Particle:
     
     #update next position
     def update(self, neighbours, screenSize):
+        #get gravity strength
+        g = Generator.gravity
+        #set acceleration
+        Ay = g
+        #apply acceleration to velocity
+        self.velocity[1] += Ay
+        
+        #update for next position
+        self.nextPos[0] = self.position[0] + self.velocity[0]
+        self.nextPos[1] = self.position[1] + self.velocity[1]
+        
         #validate x to bounds based on screen size and 0
         if self.position[0] > screenSize[0]:
-            self.position[0] = screenSize[0]
+            self.position[0] = screenSize[0]-1
         if self.position[0] < 0:
             self.position[0] = 0
         #validate y to bounds based on screen size and 0
         if self.position[1] > screenSize[1]:
-            self.position[1] = screenSize[1]
+            self.position[1] = screenSize[1] -1 
         if self.position[1] < 0:
             self.position[1] = 0
 
-        pass
         
     
     #apply new position
