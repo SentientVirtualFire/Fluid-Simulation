@@ -5,6 +5,8 @@ import math
 class Grid:
     #initialise grid
     def __init__(self, size, screenSize):
+        #hold screenSize
+        self.screenSize = screenSize
         #set size of grid
         self.cellSize = size
         #use size to calculate num columns
@@ -29,6 +31,40 @@ class Grid:
         col_idx = math.floor( particle.position[0] / self.cellSize)
         #works out row index
         row_idx = math.floor( particle.position[1] / self.cellSize)
+        #check if column is invalid
+        if col_idx >= len(self.cells):
+            #set velocity to zero
+            particle.velocity = [0,0]
+            #move particle back to safe area
+            particle.position = [particle.position[0], 
+                                 (len(self.cells)-1) * self.cellSize -10]
+            #works out column index
+            particle.position = [(len(self.cells)-1) * self.cellSize -10, 
+                                 particle.position[1]]
+            col_idx = math.floor( particle.position[0] / self.cellSize)
+        elif col_idx <= -1:
+            #set velocity to zero
+            particle.velocity = [0,0]
+            #move particle back to safe area
+            particle.position = [10, particle.position[1]]
+            #works out column index
+            col_idx = math.floor( particle.position[0] / self.cellSize)
+        #check if row is invalid
+        if row_idx >= len(self.cells[col_idx]):
+            #set velocity to zero
+            particle.velocity = [0,0]
+            #move particle back to safe area
+            particle.position = [particle.position[0], 
+                                 (len(self.cells[col_idx])-1) * self.cellSize -10]
+            #works out row index
+            row_idx = math.floor( particle.position[1] / self.cellSize)
+        elif row_idx <= -1:
+            #set velocity to zero
+            particle.velocity = [0,0]
+            #move particle back to safe area
+            particle.position = [particle.position[0], 10]
+            #works out row index
+            row_idx = math.floor( particle.position[1] / self.cellSize)
 
         #add particle to corresponding row and column in cells list
         self.cells[col_idx][row_idx].append(particle)

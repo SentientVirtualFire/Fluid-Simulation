@@ -1,25 +1,28 @@
 #get modules
-import Particle, math
+import Particle, math, random
 
 
-#default mass
-particleMass = 1
-#default viscosity
-particleViscosity = 1
-#default density
-particleDensity = 1
-#the range of x and y positions over which the particles will be produced
-posRange = ((50,500),(50,500))
+
+
 #gravitational constant
-gravity = 0.001
-
+gravity = 0.01
 #load all particles
-def particleGeneration(particles):
+def particleGeneration(particles, screen):
+    #default mass
+    particleMass = 1
+    #default viscosity
+    particleViscosity = 1
+    #default density
+    particleDensity = 1
+    #dimensions of the windows
+    winDimensions = screen.get_size()
+    #the range of x and y positions over which the particles will be produced
+    posRange = ((10,winDimensions[0]),(10,winDimensions[1]))
     #default particle count
-    particleCount = 1000
+    particleCount = 2048
     #check particleCount is in allowed range
-    if particleCount > 10000:
-        particleCount = 10000
+    if particleCount > 100000:
+        particleCount = 100000
     if particleCount < 2:
         particleCount = 2
     #check particleCount is in allowed type
@@ -49,12 +52,18 @@ def particleGeneration(particles):
             #readjust y position value
             yPos /= columnCount
             #instantiate particle class at this position
+            if random.randint(1,particleCount)==1:
+                marker = True
+            else:
+                marker = False
             particle = Particle.Particle(
                 xPos,
                 yPos,
                 particleMass,
                 particleViscosity,
-                particleDensity)
+                particleDensity,
+                colour ="red" if marker else "blue",
+                marker =  marker)
             #add to list of particles
             particles.append(particle)
             

@@ -1,5 +1,5 @@
 #Importing all modules 
-import math, Particle, pygame, Draw, Generator, Grid
+import math, Particle, pygame, Draw, Generator, Grid, matplotlib.pyplot as plt
 from timeit import default_timer as timer
 
 #initialise the pygame gui system
@@ -17,14 +17,14 @@ font = pygame.font.SysFont('chalkduster.ttf', 40)
 #list of all particles
 particles = []
 #load all particles into function
-particles = Generator.particleGeneration(particles)
+particles = Generator.particleGeneration(particles, screen)
 
 
 
 
 
 #initialise grid
-grid = Grid.Grid(50, screen.get_size())
+grid = Grid.Grid(124, screen.get_size())
 #update grid positions
 for p in particles:
     grid.addParticle(p)
@@ -33,6 +33,7 @@ fps = 0
 #sets the program to started
 running = True
 #if running is False program will stop
+kes = []
 while running:
     #takes current time
     start = timer()
@@ -49,13 +50,18 @@ while running:
                 #this part doesn't require the keys list as it is one item
                 if event.key == pygame.K_q:
                     running = False
-    
+                if event.key == pygame.K_p:
+                    running = False
+                    plt.plot(range(len(kes)),kes)
+                    plt.show()
+    tot = 0
     #get all particles and calculate with their neighbours
     for p in particles:
         neighbours = grid.getNeighbors(p)
         p.update(neighbours, screen.get_size())
     #apply all new positions
     for p in particles:
+         tot += p.energy
          p.applyUdt()
     #call module to draw particles
     Draw.drawParticles(particles, screen, pygame)
@@ -63,11 +69,10 @@ while running:
     for p in particles:
         grid.removeParticle(p)
         grid.addParticle(p)
-
     #takes time elapsed
     elapsed = timer() - start
     #calculates fps
     fps = 1/elapsed
     #logs fps
-    print(fps)
-
+    print(fps, tot)
+    kes.append(tot)
