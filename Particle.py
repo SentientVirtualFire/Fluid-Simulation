@@ -4,7 +4,7 @@ import math, Generator, numpy as np
 #class defining particles
 class Particle:
     #initialising the particles, not all properties are required immediately 
-    def __init__(self, x, y, mass, viscosity, density, pressure = 0, 
+    def __init__(self, x, y, mass, viscosity, density, pressure, 
                  cell = None, dx = 0, dy = 0, colour = "black", size = 1, radius = 0.5, marker = False):
         #particle's position
         self.position = [x,y]
@@ -32,38 +32,62 @@ class Particle:
         self.marker = marker
         #kinetic energy in particle
         self.energy = 0
+        #local density in particle
+        self.localDensity = 0
+        #local pressure in particle
+        self.localPressure = 0
     
     #update next position
     def update(self, neighbours, screenSize):
         #get gravity strength
         g = Generator.gravity
         #set acceleration
-        Ax = 0.0001
+        Ax = 0#.0000001
         Ay = g
         #set "bounciness" of walls
-        damping = 1
+        damping = 2
         #iterate over neighbours:
+        pressureForce = [0,0]
+        if self.localDensity == 0:
+            self.localDensity = self.Density(neighbours) + 0.00001
+        if self.localPressure == 0:
+            self.localPressure = (self.localDensity-self.density)*self.pressure
         for p in neighbours:
             #work out magnitude of distance between particles
-            distMag = math.sqrt(math.fabs((p.position[0]- self.position[0])**2 + (p.position[1]- self.position[1])**2))
+            distMag = math.sqrt((p.position[0]- self.position[0])**2 + (p.position[1]- self.position[1])**2)
+            if distMag == 0:
+                continue
+            #degree in radians between particles
+            deg = math.atan2(p.position[1]- self.position[1],p.position[0]- self.position[0])
+            if p.localDensity == 0:
+                p.localDensity = p.Density(neighbours)
+            if p.localPressure == 0:
+                p.localPressure = (p.localDensity-p.density)*p.pressure
             #is it in range
-            if distMag <= 1.5:
+            if distMag <= 2:
                 #v = (m1u1 + m2u2)/(m1 + m2)   
                 #magnitutde of velocity for both particles
-                veloMag = math.sqrt(self.velocity[0]**2 + self.velocity[1]**2)
-                otherVeloMag = math.sqrt(p.velocity[0]**2 + p.velocity[1]**2)
+                veloMag = self.velocity[0]**2 + self.velocity[1]**2
+                otherVeloMag = p.velocity[0]**2 + p.velocity[1]**2
                 #total energy
-                totEnergy = self.mass*veloMag**2 + p.mass*otherVeloMag**2
+                totEnergy = self.mass*veloMag + p.mass*otherVeloMag
                 #new velocity
                 newV = (totEnergy/(self.mass+p.mass))**(0.5)
-                #degree in radians between particles
-                deg = math.atan2(p.position[1]- self.position[1],p.position[0]- self.position[0])
                 #update new velocity
                 self.velocity[0] = -(newV*math.cos(deg))
                 self.velocity[1] = -(newV*math.sin(deg))
-        
+            #get local smoothing value
+            smooth = self.Smoothing(distMag,1000)
+            #set averaged pressure between local and neighbour
+            sharedPressure = (self.localPressure+p.localPressure)/2
+            #add on pressure force
+            print(math.cos(deg),smooth,sharedPressure,p.localDensity)
+            force = 1/distMag*smooth*sharedPressure/p.localDensity
+            pressureForce[0] += -(p.position[0]-self.position[0])*force
+            pressureForce[1] += -(p.position[1]-self.position[1])*force
+        Ax += pressureForce[0]/self.localDensity
+        Ay += pressureForce[1]/self.localDensity
         #particle's kinetic energy
-        #self.energy = self.mass * (self.velocity[0]**2 + self.velocity[1]**2)/2 + g*(screenSize[1]-self.position[1])
         self.energy = self.mass * (self.velocity[0]**2 + self.velocity[1]**2)
         #apply acceleration to velocity
         self.velocity[0] += Ax
@@ -95,6 +119,9 @@ class Particle:
         area = self.radius**2*4
         #take sum of particles masses and divide it by area of search
         return sum([p.mass for p in neighbours])/area 
+    #calculate smoothing
+    def Smoothing(self,dst,limit):
+        return 15/(math.pi*limit**6)*(limit-dst)**3
     
     
     #apply new position

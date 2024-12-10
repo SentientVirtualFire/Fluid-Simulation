@@ -24,7 +24,7 @@ particles = Generator.particleGeneration(particles, screen)
 
 
 #initialise grid
-grid = Grid.Grid(124, screen.get_size())
+grid = Grid.Grid(100, screen.get_size())
 #update grid positions
 for p in particles:
     grid.addParticle(p)
@@ -34,6 +34,9 @@ fps = 0
 running = True
 #if running is False program will stop
 kes = []
+kes2 = []
+max = 0
+min = 0
 while running:
     #takes current time
     start = timer()
@@ -45,13 +48,12 @@ while running:
         if event.type == pygame.QUIT:
             running = False
         #if the user presses any key
-        if event.type == pygame.KEYDOWN:
+        if event.type == pygame.KEYDOWN :
                 #if the user presses the q button 
                 #this part doesn't require the keys list as it is one item
                 if event.key == pygame.K_q:
                     running = False
                 if event.key == pygame.K_p:
-                    running = False
                     plt.plot(range(len(kes)),kes)
                     plt.show()
     tot = 0
@@ -63,8 +65,9 @@ while running:
     for p in particles:
          tot += p.energy
          p.applyUdt()
+         p.localDensity = 0
     #call module to draw particles
-    Draw.drawParticles(particles, screen, pygame)
+    max, min = Draw.drawParticles(particles, screen, pygame, max, min)
     #update grid positions
     for p in particles:
         grid.removeParticle(p)
@@ -74,5 +77,6 @@ while running:
     #calculates fps
     fps = 1/elapsed
     #logs fps
-    print(fps, tot)
+    kes2.append(sum(kes)/(len(kes)+1))
+    print(fps, tot, kes2[-1:])
     kes.append(tot)
