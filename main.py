@@ -35,8 +35,8 @@ running = True
 #if running is False program will stop
 kes = []
 kes2 = []
-max = 0
-min = 0
+max = 1
+min = 1
 while running:
     #takes current time
     start = timer()
@@ -56,27 +56,43 @@ while running:
                 if event.key == pygame.K_p:
                     plt.plot(range(len(kes)),kes)
                     plt.show()
+                if event.key == pygame.K_i:
+                    for i in particles:
+                        i.pressure /= 10
+                        print(i.pressure)
+                if event.key == pygame.K_o:
+                    for i in particles:
+                        i.pressure *= 10
+                        print(i.pressure)
     tot = 0
     #get all particles and calculate with their neighbours
     for p in particles:
-        neighbours = grid.getNeighbors(p)
-        p.update(neighbours, screen.get_size())
+        #neighbours = grid.getNeighbors(p, pygame, screen)
+        p.update(particles, screen.get_size())
     #apply all new positions
     for p in particles:
-         tot += p.energy
-         p.applyUdt()
-         p.localDensity = 0
+        tot += p.energy
+        p.applyUdt()
+        p.localDensity = 0
+         
+        if p.energy > max:
+            max = p.energy
+        if p.energy < min:
+            min = p.energy
+    mean = tot / len(particles)
     #call module to draw particles
-    max, min = Draw.drawParticles(particles, screen, pygame, max, min)
+    Draw.drawParticles(particles, screen, pygame, max, min, mean)
     #update grid positions
     for p in particles:
         grid.removeParticle(p)
         grid.addParticle(p)
+    max = 1
+    min = 1
     #takes time elapsed
     elapsed = timer() - start
     #calculates fps
     fps = 1/elapsed
     #logs fps
     kes2.append(sum(kes)/(len(kes)+1))
-    print(fps, tot, kes2[-1:])
+    #print(fps, tot, kes2[-1:])
     kes.append(tot)

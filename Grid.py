@@ -86,7 +86,7 @@ class Grid:
         del self.cells[col_idx][row_idx][arr_idx]
 
     #get a particle's neighbours
-    def getNeighbors(self, particle):
+    def getNeighbors(self, particle, pygame, screen):
         #find top grid cell in top left using radius
         top_left = [
             math.floor((particle.position[0] - particle.radius) / self.cellSize),
@@ -99,7 +99,12 @@ class Grid:
         ]
         #list of neighbours
         neighbors = []
-
+        if particle.marker:
+            #print(99999)
+            pygame.draw.rect(screen, "blue", pygame.Rect(particle.position[0] - particle.radius, 
+                                                     particle.position[1] - particle.radius, 
+                                                     particle.radius*2, 
+                                                     particle.radius*2))
         #double nested loop to iterate from left to right then top to bottom of selected area.
         for i in range(top_left[0], bottom_right[0] + 1):
             for j in range(top_left[1], bottom_right[1] + 1):
@@ -113,6 +118,10 @@ class Grid:
                     #don't add the particle itself
                     if p != particle:
                         #add neighbour
+                        if particle.marker:
+                            p.colour = "blue"
+                        else:
+                            p.colour = "red"
                         neighbors.append(p)
         
         return neighbors
