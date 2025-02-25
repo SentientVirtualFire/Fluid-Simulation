@@ -3,23 +3,23 @@ import Particle, math, random
 
 
 #gravitational constant
-gravity = 0.1
+gravity = 0.01
 #load all particles
 def particleGeneration(particles, screen):
     #default mass
     particleMass = 1
     #default viscosity
-    particleViscosity = 0.000001
+    particleViscosity = 0.00000000001
     #default density
-    particleDensity = 100
+    particleDensity = 1000
     #default pressure
-    particlePressure = 100
+    particlePressure = 0.0000000000001
     #dimensions of the windows
     winDimensions = screen.get_size()
     #the range of x and y positions over which the particles will be produced
     posRange = ((10,winDimensions[0]//3),(10,winDimensions[1]//3))
     #default particle count
-    particleCount = 2**8
+    particleCount = 2**10
     #check particleCount is in allowed range
     if particleCount > 100000:
         particleCount = 100000
@@ -52,7 +52,7 @@ def particleGeneration(particles, screen):
             #readjust y position value
             yPos /= columnCount
             #instantiate particle class at this position
-            if random.randint(1,particleCount)==1:
+            if random.randint(1,particleCount//4)==1:
                 marker = True
             else:
                 marker = False

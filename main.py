@@ -24,7 +24,8 @@ particles = Generator.particleGeneration(particles, screen)
 
 
 #initialise grid
-grid = Grid.Grid(100, screen.get_size())
+numCells = 64
+grid = Grid.Grid(numCells, screen.get_size())
 #update grid positions
 for p in particles:
     grid.addParticle(p)
@@ -67,8 +68,8 @@ while running:
     tot = 0
     #get all particles and calculate with their neighbours
     for p in particles:
-        #neighbours = grid.getNeighbors(p, pygame, screen)
-        p.update(particles, screen.get_size())
+        neighbours = grid.getNeighbors(p, pygame, screen)
+        p.update(neighbours, screen.get_size(), numCells)
     #apply all new positions
     for p in particles:
         tot += p.energy
@@ -81,6 +82,15 @@ while running:
             min = p.energy
     mean = tot / len(particles)
     #call module to draw particles
+    screen.fill("black")
+    screenSize = screen.get_size()
+    if 0:
+        for x in range(screenSize[0]):
+            for y in range(screenSize[1]):
+                if math.ceil(x % (screenSize[0] / numCells))==0 or math.ceil(y % (screenSize[1] / numCells))==0:
+                    pygame.draw.circle(screen, (16,16,16), (x,y), 1)
+                #pass
+                #print(1,x,y)
     Draw.drawParticles(particles, screen, pygame, max, min, mean)
     #update grid positions
     for p in particles:
@@ -88,6 +98,8 @@ while running:
         grid.addParticle(p)
     max = 1
     min = 1
+    
+    pygame.display.flip()     
     #takes time elapsed
     elapsed = timer() - start
     #calculates fps
@@ -96,3 +108,4 @@ while running:
     kes2.append(sum(kes)/(len(kes)+1))
     #print(fps, tot, kes2[-1:])
     kes.append(tot)
+    #print(len(particles))
