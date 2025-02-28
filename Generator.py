@@ -3,21 +3,21 @@ import Particle, math, random
 
 
 #gravitational constant
-gravity = 0.01
+gravity = 0.17
+#default mass
+particleMass = 1
+#default viscosity
+particleViscosity = 0.000000000001
+#default density
+particleDensity = 1
+#default pressure
+particlePressure = 0.0000000000001
 #load all particles
 def particleGeneration(particles, screen):
-    #default mass
-    particleMass = 1
-    #default viscosity
-    particleViscosity = 0.00000000001
-    #default density
-    particleDensity = 1000
-    #default pressure
-    particlePressure = 0.0000000000001
     #dimensions of the windows
     winDimensions = screen.get_size()
     #the range of x and y positions over which the particles will be produced
-    posRange = ((10,winDimensions[0]//3),(10,winDimensions[1]//3))
+    posRange = ((winDimensions[0]//3,int(winDimensions[0]//1.5)),(winDimensions[1]//3,int(winDimensions[1]//1.5)))
     #default particle count
     particleCount = 2**10
     #check particleCount is in allowed range
@@ -64,7 +64,9 @@ def particleGeneration(particles, screen):
                 particleDensity,
                 particlePressure,
                 colour ="red",# if marker else "blue",
-                marker =  marker)
+                marker =  marker,
+                dx = 3*(random.random()*2-1),
+                dy = 3*(random.random()*2-1))
             #add to list of particles
             particles.append(particle)
             

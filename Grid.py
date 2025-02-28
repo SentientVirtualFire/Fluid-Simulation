@@ -34,7 +34,7 @@ class Grid:
         #check if column is invalid
         if col_idx >= len(self.cells):
             #set velocity to zero
-            #particle.velocity = [0,0]
+            particle.velocity = [0,0]
             #move particle back to safe area
             particle.position = [particle.position[0], 
                                  (len(self.cells)-1) * self.cellSize -10]
@@ -44,7 +44,7 @@ class Grid:
             col_idx = math.floor( particle.position[0] / self.cellSize)
         elif col_idx <= -1:
             #set velocity to zero
-            #particle.velocity = [0,0]
+            particle.velocity = [0,0]
             #move particle back to safe area
             particle.position = [10, particle.position[1]]
             #works out column index
@@ -52,7 +52,7 @@ class Grid:
         #check if row is invalid
         if row_idx >= len(self.cells[col_idx]):
             #set velocity to zero
-            #particle.velocity = [0,0]
+            particle.velocity = [0,0]
             #move particle back to safe area
             particle.position = [particle.position[0], 
                                  (len(self.cells[col_idx])-1) * self.cellSize -10]
@@ -60,7 +60,7 @@ class Grid:
             row_idx = math.floor( particle.position[1] / self.cellSize)
         elif row_idx <= -1:
             #set velocity to zero
-            #particle.velocity = [0,0]
+            particle.velocity = [0,0]
             #move particle back to safe area
             particle.position = [particle.position[0], 10]
             #works out row index

@@ -43,11 +43,14 @@ class Particle:
     def update(self, neighbours, screenSize, numCells):
         #get gravity strength
         g = Generator.gravity
+        self.density = Generator.particleDensity
+        self.pressure = Generator.particlePressure
+        self.viscosity = Generator.particleViscosity
         #set acceleration
         Ax = 0
         Ay = g
         #set "bounciness" of walls
-        damping = 1
+        damping = 1#.000001
         pressureForce = [0,0]
         viscoForce = [0,0]
         if self.localDensity == 0:
@@ -108,8 +111,8 @@ class Particle:
         #particle's kinetic energy
         self.energy = self.mass * (self.velocity[0]**2 + self.velocity[1]**2)
         #apply acceleration to velocity
-        self.velocity[0] += Ax
-        self.velocity[1] += Ay
+        self.velocity[0] += Ax 
+        self.velocity[1] += Ay 
         v.append(self.velocity)
         #update for next position
         self.nextPos[0] = self.position[0] + self.velocity[0]
@@ -119,21 +122,18 @@ class Particle:
         #validate x to bounds based on screen size and 0
         if self.nextPos[0] > screenSize[0]:
             self.nextPos[0] = screenSize[0]-1
-            self.velocity[0] = -self.velocity[0]
+            self.velocity[0] = -self.velocity[0]/damping
         if self.nextPos[0] < 0:
             self.nextPos[0] = 0
-            self.velocity[0] = -self.velocity[0]
+            self.velocity[0] = -self.velocity[0]/damping
         #validate y to bounds based on screen size and 0
         if self.nextPos[1] > screenSize[1]:
             self.nextPos[1] = screenSize[1] -1 
-            self.velocity[1] = -self.velocity[1]
+            self.velocity[1] = -self.velocity[1]/damping
         if self.nextPos[1] < 0:
             self.nextPos[1] = 0
-            self.velocity[1] = -self.velocity[1]
-        v.append(self.velocity)
-        
-        if v[3][1] !=v[0][1]:
-            print(v)     
+            self.velocity[1] = -self.velocity[1]/damping
+
     #calculate density mass/area
     def Density(self,neighbours,screenSize, cells):
         neighbours.append(self)
