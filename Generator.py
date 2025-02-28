@@ -3,15 +3,15 @@ import Particle, math, random
 
 
 #gravitational constant
-gravity = 0.17
+gravity = 1.7
 #default mass
 particleMass = 1
 #default viscosity
-particleViscosity = 0.000000000001
+particleViscosity = 1E-12
 #default density
 particleDensity = 1
 #default pressure
-particlePressure = 0.0000000000001
+particlePressure = 1E-12
 #load all particles
 def particleGeneration(particles, screen):
     #dimensions of the windows

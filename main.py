@@ -6,7 +6,7 @@ from timeit import default_timer as timer
 pygame.init()
 #makes the screen variable to draw all the particles 
 #and aligns the top left corner as 0,0 with full screen
-screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
+screen = pygame.display.set_mode((0, 0))
 #sets the system clock for initialising the pygame library
 clock = pygame.time.Clock()
 #dimensions of the windows
@@ -100,6 +100,30 @@ while running:
                 #reset
                 if event.key == pygame.K_r:
                     grid, particles = Reset(grid, particles)
+                
+                #if key is pressed validate viscosity for range
+                if Generator.particleViscosity > 1e-10:
+                    Generator.particleViscosity = 1e-10
+                if Generator.particleViscosity < 1e-14:
+                    Generator.particleViscosity = 1e-14
+                #validate pressure
+                if Generator.particlePressure < 1e-15:
+                    Generator.particlePressure = 1e-15
+                if Generator.particlePressure > 1e-8:
+                    Generator.particlePressure = 1e-8
+                #validate density
+                if Generator.particleDensity < 0:
+                    Generator.particleDensity = 1e-6
+                #validate types
+                if type(Generator.particleDensity) != type(0.1):
+                    Generator.particleDensity = 1
+                if type(Generator.particlePressure) != type(0.1):
+                    Generator.particlePressure = 1e-10
+                if type(Generator.particleViscosity) != type(0.1):
+                    Generator.particleViscosity = 1e-12
+                if type(Generator.gravity) != type(0.1):
+                    Generator.gravity = 0.5
+
     tot = 0
     #get all particles and calculate with their neighbours
     for p in particles:

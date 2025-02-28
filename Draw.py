@@ -1,13 +1,17 @@
 import math, Generator
 
+def scale(start, end, x):
+    #scale given by a to b at point x
+    return round((x - start) / (end - start), 5)
+
 #draws ui to screen
 def drawUI(screen, pygame, fps, font):
     #create text object to draw to screen
     txts = [f"FPS: {round(fps,1)}",
             f"Density: {Generator.particleDensity}",
             f"Gravity: {Generator.gravity}",
-            f"Pressure: {Generator.particlePressure}",
-            f"Viscosity: {Generator.particleViscosity}",]
+            f"Pressure: {scale(-15,-8,math.log10(Generator.particlePressure))}",
+            f"Viscosity: {scale(-14,-10,math.log10(Generator.particleViscosity))}",]
     #rounding the fps value as actual number is approx to 10 decimal places
     #which isnt providing useful data 
     #rendered texts
